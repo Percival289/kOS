@@ -10,7 +10,7 @@ function main {
 		if LISTEN():content = "Init Launch" { NAV_InitLaunch(). }
 		if LISTEN():content = "Launch" { NAV_Launch(). }
 		if LISTEN():content = "MAX THROTTLE" { set throttleVar to 1. }
-		if LISTEN():content = "CIRC_THROTTLE" { NAV_CircThrottle(). }
+		if LISTEN():content = "BURN_THROTTLE" { NAV_BurnThrottle(). }
 	}
 }
 
@@ -88,10 +88,12 @@ function getPitch {
     return pitch.
 }
 
-function NAV_CircThrottle {
+function NAV_BurnThrottle {
+	// TODO: Change to work with any target periapsis
+	set targetPe to ship:apoapsis. 
 	until LISTEN():content = "Circ Done" {
-		if abs(targetAP - ship:periapsis <= 5000) {
-			set throttleVar to 0.02 + 0.000169577 * abs(targetAP - ship:periapsis) + (-0.0000000165) * abs(targetAP - ship:periapsis) ^ 2.
+		if abs(targetPe - ship:periapsis <= 5000) {
+			set throttleVar to 0.02 + 0.000169577 * abs(targetPe - ship:periapsis) + (-0.0000000165) * abs(targetPe - ship:periapsis) ^ 2.
 		} else {
 			set throttleVar to 1.
 		}

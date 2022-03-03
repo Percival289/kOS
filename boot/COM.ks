@@ -1,3 +1,5 @@
+// TODO: Write log to archive
+
 run "lib_general.ks".
 
 print "Communications".

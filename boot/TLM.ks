@@ -1,3 +1,7 @@
+// TODO: New way of displaying telemetry
+// TODO: Write to file and send to archive
+// TODO: Add more data
+
 run "lib_general.ks".
 
 print "Telemetry".

@@ -1,3 +1,7 @@
+// TODO: Add resource monitoring
+// TODO: Control electrical system + power management
+// TODO: Monitor fuel quantities
+
 run "lib_general.ks".
 
 print "Resources".
