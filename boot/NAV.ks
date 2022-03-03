@@ -10,7 +10,7 @@ function main {
 		if LISTEN():content = "Init Launch" { NAV_InitLaunch(). }
 		if LISTEN():content = "Launch" { NAV_Launch(). }
 		if LISTEN():content = "MAX THROTTLE" { set throttleVar to 1. }
-		if LISTEN():content = "CUT THROTTLE" { set throttleVar to 0. }
+		if LISTEN():content = "CIRC_THROTTLEDOWN" { NAV_CircThrottle(). }
 	}
 }
 
@@ -86,6 +86,14 @@ function getPitch {
     set pitch to slope * apoapsis + 90.
     set pitch to max(pitch, 0).
     return pitch.
+}
+
+function NAV_CircThrottle {
+	until LISTEN():content = "Circ Done" {
+		if abs(targetAP - ship:periapsis <= 5000) {
+			set throttleVar to 0.02 + 0.000169577 * abs(targetAP - ship:periapsis) + (-0.0000000165) * abs(targetAP - ship:periapsis) ^ 2.
+		}
+	}
 }
 
 function NAV_Ascent {
