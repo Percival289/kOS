@@ -14,6 +14,14 @@ function init {
 	}
 }
 
+set IMA to list().
+function listenForMessages {
+    when not core:messages:empty then {
+        set recieved to core:messages:peek.
+        if recieved:content[0] = "IMA" { set IMA[recieved:content[1]] to missionTime. }
+    }
+}
+
 function GUI_Launch {
 
 	FYI("START LAUNCH SEQUENCE").
@@ -22,15 +30,15 @@ function GUI_Launch {
 
     wait 0.5.
     MSG("NAV", "Init Launch").
-	wait until LISTEN():content = "NAV_Ready". GUI_Stage(). // Enable stage 1 engine
+	wait until LISTEN():content[0] = "NAV_Ready". GUI_Stage(). // Enable stage 1 engine
 
     wait 0.5.
 	MSG("RES", "Init Launch").
-    wait until LISTEN():content = "RES_Ready".
+    wait until LISTEN():content[0] = "RES_Ready".
 
     wait 0.5.
 	MSG("TLM", "Init Launch").
-    wait until LISTEN():content = "TLM;Ready".
+    wait until LISTEN():content[0] = "TLM;Ready".
     
 	// Mission log update
 	FYI("Go for launch").
@@ -39,7 +47,7 @@ function GUI_Launch {
 	MSG("NAV", "Launch").
     
 	// Launch clamps released
-	wait until LISTEN():content = "Go". GUI_Stage().
+	wait until LISTEN():content[0] = "Go". GUI_Stage().
     FYI("Clamps released").
 
     // Check for liftoff
@@ -47,7 +55,7 @@ function GUI_Launch {
     FYI("Liftoff confirmed").
 
     // Update points
-    when LISTEN():content = "Gravity turn start" then { FYI("Gravity turn capture").}
+    when LISTEN():content[0] = "Gravity turn start" then { FYI("Gravity turn capture").}
 
     // Run until target AP reached
     until ship:apoapsis >= targetAp {
@@ -102,7 +110,7 @@ function GUI_LaunchStaging {
         GUI_Stage().
         // Second stage engine
         if stage:number = 5 {
-            MSG("NAV", "MAX THROTTLE").
+            MSG("NAV", list("THROTTLE", 1)).
             GUI_Stage().
         }
         FYI("Stage [" + stage:number + "] separation").
@@ -157,9 +165,11 @@ function GUI_CircBurn {
     MSG("NAV", "Circ Done").
 }
 
+// Calculate the length of burn (seconds)
 function GUI_CalcBurnTime {
     parameter dV.
 
+    // TODO: Get engine ISP and thrust from engine variables instead of set values
     set v_exhaust to 325 * constant:g0.
     set burnTime to ((ship:mass*v_exhaust)/60000) * (1 - (constant:e ^ (-dV/v_exhaust))) * 1000.
     return burnTime.

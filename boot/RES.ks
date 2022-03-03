@@ -8,7 +8,9 @@ print "Resources".
 
 function main {
 	until false {
-		if LISTEN():content = "Init Launch" { RES_InitLaunch(). }
+		set message to LISTEN().
+		if message:content = "Init Launch" { RES_InitLaunch(). }
+		if message:content[0]
 	}
 }
 

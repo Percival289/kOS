@@ -7,10 +7,12 @@ print "Navigation".
 
 function main {
 	until false {
-		if LISTEN():content = "Init Launch" { NAV_InitLaunch(). }
-		if LISTEN():content = "Launch" { NAV_Launch(). }
-		if LISTEN():content = "MAX THROTTLE" { set throttleVar to 1. }
-		if LISTEN():content = "BURN_THROTTLE" { NAV_BurnThrottle(). }
+		set message to LISTEN().
+		if message:content[0] = "Init Launch" { NAV_InitLaunch(). }
+		if message:content[0] = "Launch" { NAV_Launch(). }
+		// No idea if this will do what I want
+		if message:content[0] = "THROTTLE" { set throttleVar to message:content[1]. }
+		if message:content[0] = "BURN_THROTTLE" { NAV_BurnThrottle(). }
 	}
 }
 
@@ -53,7 +55,7 @@ function NAV_Launch {
 	}
 	until ship:altitude > 70000 {
 		print "== NAV Final AP Adjustments ==".
-		print "".
+		print "  ".
 		print "Throttle          |  " + round(throttleVar,2).
 		print "AP Error          |  " + round(ship:apoapsis - targetAp).
 		print "Orbital Velocity  |  " + round(ship:velocity:orbit:mag).
@@ -75,7 +77,6 @@ function NAV_Launch {
 function NAV_LaunchThrottle {
 	// Quadratic controls throttle for last 2000m burn
 	if abs(targetAP - ship:apoapsis) <= 5000 {
-		
         set throttleVar to min(0.02 + 0.000169577 * abs(targetAP - ship:apoapsis) + (-0.0000000165) * abs(targetAP - ship:apoapsis) ^ 2, max(min(1.5 /( (933 * 1000) / ((ship:mass*1000) * constant:g0)), 1),0.01)).
     } else {
         set throttleVar to max(min(1.5 /( (933 * 1000) / ((ship:mass*1000) * constant:g0)), 1),0.01).
