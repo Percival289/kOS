@@ -1,1 +1,0 @@
-print "Booster Program".
