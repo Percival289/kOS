@@ -1,7 +1,6 @@
 // TODO: Detect Flight Phase
-// TODO: Recieve messages for mission log
 // TODO: Monitor system status
-// TODO: Staging system
+// TODO: Improve burn time on circ
 
 run "lib_general.ks".
 // Initialize guidance system
