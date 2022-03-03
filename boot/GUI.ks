@@ -1,6 +1,5 @@
 // TODO: Detect Flight Phase
 // TODO: Monitor system status
-// TODO: Improve burn time on circ
 
 run "lib_general.ks".
 // Initialize guidance system
@@ -134,14 +133,12 @@ function GUI_CircBurn {
     parameter t.
 
     wait until eta:apoapsis <= t/2.
-    MSG("NAV", "MAX THROTTLE").
-    wait t.
-    MSG("NAV", "CUT THROTTLE").
+    MSG("NAV", "CIRC_THROTTLE").
+    wait until ship:periapsis >= targetAp.
+    MSG("NAV", "Circ Done").
 }
 
 function GUI_CalcBurnTime {
-
-    // target 3 seconds
     parameter dV.
 
     set v_exhaust to 325 * constant:g0.
