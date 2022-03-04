@@ -17,6 +17,8 @@ function TLM_InitLaunch {
 	FYI("Ready").
     print "Ready".
     print "".
+
+    //when ship:q*101325 >= 155 then { FYI(formatmet() + " Max Q"). }
     until false {
         print "Q:         " + round(ship:q*1000,2) + "pa (MAX: 155pa)".
         print "Pitch:     " + round(ship:facing:pitch,3) + " degrees".
@@ -26,6 +28,8 @@ function TLM_InitLaunch {
         print "Apoapsis:  " + round(ship:apoapsis, 3) + "m".
         print "Periapsis: " + round(ship:periapsis, 3) + "m".
         print "V_Orbit:   " + round(ship:velocity:orbit:mag) + "m/s".
+
+        
         wait 0.01.
         clearscreen.
     }
