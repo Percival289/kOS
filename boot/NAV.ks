@@ -70,7 +70,7 @@ function NAV_Launch {
 		
 	}
 	NAV_Shutdown().
-	FYI("Apoapsis reached target height ("+targetAp/1000+"km)").
+	FYI("[T+"+ formatmet() +"] Apoapsis reached target height ("+targetAp/1000+"km)").
 
 }
 
@@ -92,15 +92,18 @@ function getPitch {
 function NAV_BurnThrottle {
 	// TODO: Change to work with any target periapsis
 	set targetPe to ship:apoapsis. 
-	print "Burn Throttle".
+
+	when ship:periapsis > 60000 then { FYI("[T+"+ formatmet() +"] Second stage dropped into decel orbit"). wait until stage:ready. stage. wait until stage:ready. stage. }
+
 	until ship:periapsis >= targetPe {
 		if abs(targetPe - ship:periapsis <= 5000) {
-			set throttleVar to 0.02 + 0.000169577 * abs(targetPe - ship:periapsis) + (-0.0000000165) * abs(targetPe - ship:periapsis) ^ 2.
+			set throttleVar to 0.1 + 0.000169577 * abs(targetPe - ship:periapsis) + (-0.0000000165) * abs(targetPe - ship:periapsis) ^ 2.
 		} else {
 			set throttleVar to 1.
 		}
 	}
 	set throttleVar to 0.
+	FYI("[T+"+ formatmet() +"] Circularized ("+round(ship:apoapsis,0)+","+round(ship:periapsis,0)+")").
 }
 
 function NAV_Ascent {
