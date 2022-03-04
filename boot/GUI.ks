@@ -38,14 +38,14 @@ function GUI_Launch {
 
     wait 0.5.
 	MSG("TLM", "Init Launch").
-    wait until LISTEN():content[0] = "TLM;Ready".
+    wait until LISTEN():content[0] = "TLM_Ready".
     
 	// Mission log update
 	FYI("Go for launch").
 	
 	// Engines to launch power
 	MSG("NAV", "Launch").
-    
+    print "Launch sent to NAV".
 	// Launch clamps released
 	wait until LISTEN():content[0] = "Go". GUI_Stage().
     FYI("Clamps released").
@@ -70,6 +70,7 @@ function GUI_Launch {
     wait 3.
 
     // TODO: Find new way to sepratate stages quickly
+    MSG("BOOSTER", "Decouple").
     AG3 on. wait 0.01. GUI_Stage(). GUI_Stage().
 
     wait 1.
@@ -156,9 +157,10 @@ function GUI_CalcCircularization {
 // Actual burn function to circularize
 function GUI_CircBurn {
     parameter t.
-
+    
     // Wait until the apoapsis is at the halfway point of the burn
     wait until eta:apoapsis <= t/2.
+    print "Burning".
     // NAV: Manage burn throttle
     MSG("NAV", "BURN_THROTTLE").
     wait until ship:periapsis >= targetAp.

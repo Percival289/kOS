@@ -6,7 +6,7 @@ print "Communications".
 
 function main {
 	until false {
-		print LISTEN():content.
+		print LISTEN():content[0].
 	}
 }
 
