@@ -3,8 +3,8 @@ function HAS_FILE { parameter n. parameter v. switch to v. list files in f. for 
 copypath("0:/libraries/lib_general.ks","").
 copypath("0:/boot/Safemode.ks","").
 run "lib_general.ks".
-set terminal:width to 50.
-set terminal:height to 36.
+set terminal:width to 70.
+set terminal:height to 46.
 
 FYI("").
 FYI("----- START OF MISSION LOG -----").

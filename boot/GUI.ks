@@ -24,7 +24,7 @@ function listenForMessages {
 
 function GUI_Launch {
 
-	FYI("[T+"+ formatmet() +"] START LAUNCH SEQUENCE").
+	FYI(formatmet() + " START LAUNCH SEQUENCE").
 
 	// Send init messages and start processes
 
@@ -52,10 +52,10 @@ function GUI_Launch {
 
     // Check for liftoff
     wait until ship:altitude > 5.
-    FYI("[T+"+ formatmet() +"] Liftoff confirmed").
+    FYI(formatmet() + " Liftoff confirmed").
 
     // Update points
-    when LISTEN():content[0] = "Gravity turn start" then { FYI("[T+"+ formatmet() +"] Gravity turn capture").}
+    when LISTEN():content[0] = "Gravity turn start" then { FYI(formatmet() + " Gravity turn capture").}
 
     // Run until target AP reached
     until ship:apoapsis >= targetAp {
@@ -65,6 +65,7 @@ function GUI_Launch {
 
     // TODO: Replace with variable
     wait until ship:altitude > 70000.
+    FYI(formatmet() + " Reached edge of atmosphere").
     
     // Once out of atmosphere, decouple launch stage and start engine
     wait 3.
@@ -84,7 +85,7 @@ function GUI_Launch {
     print "Burn time: " + circBurnTime.
 
     // Start circularization burn
-    FYI("[T+"+ formatmet() +"] Start circularization process").
+    FYI(formatmet() + " Start circularization process").
     GUI_CircBurn(circBurnTime).
 	
 }
@@ -98,34 +99,12 @@ function GUI_Stage {
 // Print message with mission time (T+)
 function GUI_print {
     parameter message.
-    print "[T+" + formatmet() + "] " + message.
+    print "[T+" + formatmet()() + "] " + message.
 }
 
 // Auto-staging during launch
 function GUI_LaunchStaging {
-
-    if not(defined oldThrust) {
-        global oldThrust is ship:availablethrust.
-    }
-    // If there's a significant decrease in available thrust, assume it's from lack of fuel and stage
-    if ship:availablethrust < (oldThrust - 10) {
-        GUI_Stage().
-        // Second stage engine
-        if stage:number = 5 {
-            MSG("NAV", list("THROTTLE", 1)).
-            GUI_Stage().
-        }
-        FYI("[T+"+ formatmet() +"] Stage [" + stage:number + "] separation").
-        wait 0.2.
-        global oldThrust is ship:availablethrust.
-    }
-
-    // Eject LES
-    //if ship:altitude > 13000 and not AG2 {
-    //    AG2 on.
-    //    FYI("[T+"+ formatmet() +"] LES jettisoned").
-    //}
-
+    
     // Eject external tanks when empty
     // TODO: Move tank fuel checks to RES
     if ship:partsdubbed("measureTank"):length > 0 {
@@ -136,7 +115,7 @@ function GUI_LaunchStaging {
                 break.
             }
         }
-        if lfAmount:amount = 0 { GUI_Stage(). FYI("[T+"+ formatmet() +"] External tanks jettisoned"). }
+        if lfAmount:amount = 0 { GUI_Stage(). FYI(formatmet() + " External tanks jettisoned"). }
     }
     
 }
@@ -161,10 +140,12 @@ function GUI_CircBurn {
     
     // Wait until the apoapsis is at the halfway point of the burn
     wait until eta:apoapsis <= t/2.
-    FYI("[T+"+ formatmet() +"] Start circularization burn").
+    FYI(formatmet() + " Start circularization burn").
     // NAV: Manage burn throttle
     MSG("NAV", "BURN_THROTTLE").
     wait until ship:periapsis >= targetAp.
+	FYI(formatmet() + " Circularized ("+round(ship:apoapsis,0)+","+round(ship:periapsis,0)+")").
+    
 
 }
 
