@@ -7,10 +7,12 @@ print "Navigation".
 
 function main {
 	until false {
-		if LISTEN():content = "Init Launch" { NAV_InitLaunch(). }
-		if LISTEN():content = "Launch" { NAV_Launch(). }
-		if LISTEN():content = "MAX THROTTLE" { set throttleVar to 1. }
-		if LISTEN():content = "CUT THROTTLE" { set throttleVar to 0. }
+		set message to LISTEN().
+		if message:content[0] = "Init Launch" { NAV_InitLaunch(). }
+		if message:content[0] = "Launch" { NAV_Launch(). }
+		// No idea if this will do what I want
+		if message:content[0] = "THROTTLE" { set throttleVar to message:content[1]. }
+		if message:content[0] = "BURN_THROTTLE" { NAV_BurnThrottle(). }
 	}
 }
 
@@ -53,7 +55,7 @@ function NAV_Launch {
 	}
 	until ship:altitude > 70000 {
 		print "== NAV Final AP Adjustments ==".
-		print "".
+		print "  ".
 		print "Throttle          |  " + round(throttleVar,2).
 		print "AP Error          |  " + round(ship:apoapsis - targetAp).
 		print "Orbital Velocity  |  " + round(ship:velocity:orbit:mag).
@@ -75,7 +77,6 @@ function NAV_Launch {
 function NAV_LaunchThrottle {
 	// Quadratic controls throttle for last 2000m burn
 	if abs(targetAP - ship:apoapsis) <= 5000 {
-		
         set throttleVar to min(0.02 + 0.000169577 * abs(targetAP - ship:apoapsis) + (-0.0000000165) * abs(targetAP - ship:apoapsis) ^ 2, max(min(1.5 /( (933 * 1000) / ((ship:mass*1000) * constant:g0)), 1),0.01)).
     } else {
         set throttleVar to max(min(1.5 /( (933 * 1000) / ((ship:mass*1000) * constant:g0)), 1),0.01).
@@ -86,6 +87,20 @@ function getPitch {
     set pitch to slope * apoapsis + 90.
     set pitch to max(pitch, 0).
     return pitch.
+}
+
+function NAV_BurnThrottle {
+	// TODO: Change to work with any target periapsis
+	set targetPe to ship:apoapsis. 
+	print "Burn Throttle".
+	until ship:periapsis >= targetPe {
+		if abs(targetPe - ship:periapsis <= 5000) {
+			set throttleVar to 0.02 + 0.000169577 * abs(targetPe - ship:periapsis) + (-0.0000000165) * abs(targetPe - ship:periapsis) ^ 2.
+		} else {
+			set throttleVar to 1.
+		}
+	}
+	set throttleVar to 0.
 }
 
 function NAV_Ascent {

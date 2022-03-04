@@ -1,15 +1,19 @@
+// TODO: New way of displaying telemetry
+// TODO: Write to file and send to archive
+// TODO: Add more data
+
 run "lib_general.ks".
 
 print "Telemetry".
 
 function main {
 	until false {
-		if LISTEN():content = "Init Launch" { TLM_InitLaunch(). }
+		if LISTEN():content[0] = "Init Launch" { TLM_InitLaunch(). }
 	}
 }
 
 function TLM_InitLaunch {
-	//MSG("GUI", "TLM_Ready").
+	MSG("GUI", "TLM_Ready").
 	FYI("Ready").
     print "Ready".
     print "".

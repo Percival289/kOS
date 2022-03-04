@@ -1,10 +1,16 @@
+// TODO: Add resource monitoring
+// TODO: Control electrical system + power management
+// TODO: Monitor fuel quantities
+
 run "lib_general.ks".
 
 print "Resources".
 
 function main {
 	until false {
-		if LISTEN():content = "Init Launch" { RES_InitLaunch(). }
+		set message to LISTEN().
+		if message:content[0] = "Init Launch" { RES_InitLaunch(). }
+		//if message:content[0]
 	}
 }
 

@@ -29,9 +29,10 @@ function FYI {
 function MSG {
     parameter target.
     parameter message.
-    
+    parameter value to "None".
+
     set p to processor(target).
-    p:connection:sendmessage(message).
+    p:connection:sendmessage(list(message, value)).
 }
 
 function LISTEN {

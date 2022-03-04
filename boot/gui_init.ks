@@ -17,6 +17,7 @@ processor("NAV"):deactivate.
 processor("RES"):deactivate.
 processor("TLM"):deactivate.
 processor("COM"):deactivate.
+processor("BOOSTER"):deactivate.
 
 FYI("Copying general files to other processors.").
 
@@ -24,6 +25,7 @@ copypath("lib_general.ks","NAV:/lib_general.ks").
 copypath("lib_general.ks","RES:/lib_general.ks").
 copypath("lib_general.ks","TLM:/lib_general.ks").
 copypath("lib_general.ks","COM:/lib_general.ks").
+copypath("lib_general.ks","BOOSTER:/lib_general.ks").
 
 wait 0.2.
 
@@ -56,6 +58,13 @@ set RESp:bootfilename to "RES.ks".
 processor("RES"):activate.
 wait 0.3.
 
+FYI("Initializing processor BOOSTER").
+copypath("0:/boot/BOOSTER.ks","BOOSTER:/BOOSTER.ks").
+set BOOSTERp to processor("BOOSTER").
+set BOOSTERp:bootfilename to "BOOSTER.ks".
+processor("BOOSTER"):activate.
+wait 0.3.
+
 FYI("Initializing self").
 copypath("0:/boot/GUI.ks","").
 set GUIp to processor("GUI").
@@ -63,5 +72,5 @@ set GUIp:bootfilename to "GUI.ks".
 wait 0.3.
 
 FYI("Rebooting").
-wait 5.
+wait 2.
 reboot.
