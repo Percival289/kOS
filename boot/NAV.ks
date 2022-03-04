@@ -94,21 +94,15 @@ function NAV_BurnThrottle {
 	// TODO: Change to work with any target periapsis
 	set targetPe to ship:apoapsis. 
 
-	
-	
+	wait until ship:periapsis > 60000.
+	set throttleVar to 0.
+	FYI(formatmet() + " Stage 2 separation"). wait until stage:ready. stage. wait until stage:ready. stage. 
+	FYI(formatmet() + " Stage 3 startup").
+	FYI(formatmet() + " Final circularization burn").
+	wait 0.2.
+	set throttleVar to 1.
+
 	until ship:periapsis >= targetPe {
-
-		// Second stage doesn't detach and third stage engine won't start
-		if ship:periapsis > 60000 and stage2Dropped = false {
-			set throttleVar to 0.
-			
-			FYI(formatmet() + " Second stage dropped"). wait until stage:ready. stage. wait until stage:ready. stage. 
-			FYI(formatmet() + " Stage 3 startup").
-			FYI(formatmet() + " Final circularization burn").
-			wait 0.2.
-
-			set stage2Dropped to true.
-		}
 
 		if abs(targetPe - ship:periapsis <= 5000) {
 			set throttleVar to 0.1 + 0.000169577 * abs(targetPe - ship:periapsis) + (-0.0000000165) * abs(targetPe - ship:periapsis) ^ 2.
