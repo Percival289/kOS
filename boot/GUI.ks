@@ -104,7 +104,6 @@ function GUI_print {
 
 // Auto-staging during launch
 function GUI_LaunchStaging {
-    
     // Eject external tanks when empty
     // TODO: Move tank fuel checks to RES
     if ship:partsdubbed("measureTank"):length > 0 {

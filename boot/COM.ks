@@ -1,4 +1,6 @@
 // TODO: Write log to archive
+set terminal:width to 70.
+set terminal:height to 46.
 
 run "lib_general.ks".
 
